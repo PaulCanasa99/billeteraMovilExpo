@@ -26,6 +26,7 @@ const Home = ({ navigation }) => {
       <Text style={style.saldo}>{`S/. ${usuario.saldo.toFixed(2)}`}</Text>
       <Button
         style={style.button}
+        labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
         uppercase={false}
         mode="contained"
         onPress={() =>
@@ -36,6 +37,7 @@ const Home = ({ navigation }) => {
       </Button>
       <Button
         style={style.button}
+        labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
         uppercase={false}
         mode="contained"
         // onPress={() =>
@@ -62,17 +64,20 @@ const style = StyleSheet.create({
     width: '80%',
     textAlign: 'center',
     marginBottom: 30,
+    fontFamily: 'Montserrat',
   },
   saldo: {
     fontSize: 48,
     width: '70%',
     textAlign: 'center',
     marginBottom: 80,
+    fontFamily: 'Montserrat',
   },
   button: {
     width: '60%',
     marginTop: 50,
     justifyContent: 'center',
+    fontFamily: 'Montserrat',
   },
 });
 

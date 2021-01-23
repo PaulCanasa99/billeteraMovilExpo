@@ -1,12 +1,11 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   NavigationContainer,
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 import {
-  configureFonts,
   DarkTheme as PaperDarkTheme,
   DefaultTheme as PaperDefaultTheme,
   Provider as PaperProvider,
@@ -14,37 +13,9 @@ import {
 import { firebase } from './src/firebase/config';
 import Navigator from './src/screens/Navigator';
 import merge from 'deepmerge';
-import fontConfig from './src/utils/fontConfig';
 import { Context } from './src/context/Context';
 import RegistroNavigator from './src/screens/Registro/RegistroNavigator';
-import { useEffect } from 'react';
-
-const theme = {
-  ...PaperDefaultTheme,
-  roundness: 50,
-  fonts: configureFonts(fontConfig),
-  colors: {
-    ...PaperDefaultTheme.colors,
-    primary: '#00ADB5',
-    accent: '#EEEEEE',
-    background: '#A6E3E9',
-    text: '#222831',
-    surface: '#222831',
-  },
-};
-
-const MyTheme = {
-  ...NavigationDefaultTheme,
-  colors: {
-    ...NavigationDefaultTheme.colors,
-    primary: '#00ADB5',
-    background: '#A6E3E9',
-    text: '#222831',
-    card: '#222831',
-  },
-};
-const CombinedDefaultTheme = merge(theme, MyTheme);
-const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
+import { useFonts } from 'expo-font';
 
 const App = () => {
   const [initializing, setInitializing] = useState(true);
@@ -52,6 +23,35 @@ const App = () => {
   const [usuario, setUsuario] = useState();
   const [destination, setDestination] = useState('');
   const usuariosRef = firebase.firestore().collection('Usuarios');
+  const [loaded] = useFonts({
+    Montserrat: require('./assets/fonts/Montserrat-Regular.ttf'),
+    MontserratSemiBold: require('./assets/fonts/Montserrat-SemiBold.ttf'),
+  });
+  const theme = {
+    ...PaperDefaultTheme,
+    roundness: 50,
+    colors: {
+      ...PaperDefaultTheme.colors,
+      primary: '#00ADB5',
+      accent: '#EEEEEE',
+      background: '#A6E3E9',
+      text: '#222831',
+      surface: '#222831',
+    },
+  };
+
+  const MyTheme = {
+    ...NavigationDefaultTheme,
+    colors: {
+      ...NavigationDefaultTheme.colors,
+      primary: '#00ADB5',
+      background: '#A6E3E9',
+      text: '#222831',
+      card: '#222831',
+    },
+  };
+  const CombinedDefaultTheme = merge(theme, MyTheme);
+  //const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
   const onAuthStateChanged = (user) => {
     setUser(user);
     if (user)
@@ -75,7 +75,7 @@ const App = () => {
     return subscriber; // unsubscribe on unmount
   }, []);
 
-  if (initializing) return null;
+  if (initializing || !loaded) return null;
 
   return (
     <Context.Provider

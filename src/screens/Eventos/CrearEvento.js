@@ -5,6 +5,7 @@ import { Button, useTheme, Text } from 'react-native-paper';
 import { firebase } from '../../firebase/config';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Context } from '../../context/Context';
@@ -67,36 +68,33 @@ const CrearEvento = ({ navigation }) => {
           }}
         />
         <View style={style.inputContainer}>
-          <Text
-            style={{ fontFamily: 'Montserrat-SemiBold', color: colors.primary }}
-          >
+          <Text style={{ fontFamily: 'Montserrat', color: colors.primary }}>
             Nombre del evento:
           </Text>
           <TextInput
+            placeholder="Nombre del evento"
             type="outlined"
             style={style.input}
             onChangeText={(text) => setNombre(text)}
           />
         </View>
         <View style={style.inputContainer}>
-          <Text
-            style={{ fontFamily: 'Montserrat-SemiBold', color: colors.primary }}
-          >
+          <Text style={{ fontFamily: 'Montserrat', color: colors.primary }}>
             Descripción:
           </Text>
           <TextInput
+            placeholder="Descripción"
             type="outlined"
             style={style.input}
             onChangeText={(text) => setDescripcion(text)}
           />
         </View>
         <View style={style.inputContainer}>
-          <Text
-            style={{ fontFamily: 'Montserrat-SemiBold', color: colors.primary }}
-          >
+          <Text style={{ fontFamily: 'Montserrat', color: colors.primary }}>
             Precio por persona:
           </Text>
           <TextInput
+            placeholder="Precio"
             type="outlined"
             style={style.input}
             textContentType="emailAddress"
@@ -108,7 +106,7 @@ const CrearEvento = ({ navigation }) => {
           <View style={style.fecha}>
             <Text
               style={{
-                fontFamily: 'Montserrat-SemiBold',
+                fontFamily: 'Montserrat',
                 color: colors.primary,
                 flexGrow: 1,
               }}
@@ -135,7 +133,8 @@ const CrearEvento = ({ navigation }) => {
         </View>
 
         {show && (
-          <RNDateTimePicker
+          <DateTimePicker
+            style={{ width: 100 }}
             testID="dateTimePicker"
             value={date}
             mode={mode}
@@ -146,6 +145,7 @@ const CrearEvento = ({ navigation }) => {
           />
         )}
         <Button
+          labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
           style={style.button}
           uppercase={false}
           mode="contained"
@@ -174,6 +174,7 @@ const style = StyleSheet.create({
     height: 30,
   },
   input: {
+    fontFamily: 'Montserrat',
     borderBottomColor: '#00ADB5',
     borderBottomWidth: 1,
     marginBottom: 10,

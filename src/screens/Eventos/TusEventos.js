@@ -41,6 +41,7 @@ const TusEventos = ({ navigation }) => {
         style={{ ...style.buttonsContainer, borderBottomColor: colors.primary }}
       >
         <Button
+          labelStyle={{ fontFamily: 'Montserrat', fontSize: 20 }}
           color="white"
           style={{
             ...style.proximos,
@@ -50,7 +51,12 @@ const TusEventos = ({ navigation }) => {
         >
           Próximos
         </Button>
-        <Button color={colors.text} style={style.antiguos} uppercase={false}>
+        <Button
+          labelStyle={{ fontFamily: 'Montserrat', fontSize: 20 }}
+          color={colors.text}
+          style={style.antiguos}
+          uppercase={false}
+        >
           Antiguos
         </Button>
       </View>
@@ -62,13 +68,21 @@ const TusEventos = ({ navigation }) => {
               left={() => <List.Icon icon="account" />}
               style={{ ...style.listItem, borderBottomColor: colors.primary }}
               title={item.nombre}
-              titleStyle={{ fontSize: 18, color: colors.text }}
+              titleStyle={{
+                fontSize: 18,
+                color: colors.text,
+                fontFamily: 'Montserrat',
+              }}
               description={format(
                 item.fecha.toDate(),
                 "EEEE, d 'de' MMMM HH:mm",
                 { locale: es }
               )}
-              descriptionStyle={{ fontSize: 18, color: colors.text }}
+              descriptionStyle={{
+                fontSize: 18,
+                color: colors.text,
+                fontFamily: 'Montserrat',
+              }}
               onPress={() =>
                 navigation.navigate('Evento', {
                   nombre: item.nombre,

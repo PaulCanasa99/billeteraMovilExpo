@@ -13,7 +13,7 @@ const CustomNavigationBar = ({ navigation, previous, scene }) => {
     <Appbar.Header style={style.appBar}>
       {previous ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
       <Appbar.Content
-        titleStyle={{ fontFamily: 'Montserrat-SemiBold' }}
+        titleStyle={{ fontFamily: 'MontserratSemiBold' }}
         style={style.appTitle}
         title={scene.route.params.name}
       />

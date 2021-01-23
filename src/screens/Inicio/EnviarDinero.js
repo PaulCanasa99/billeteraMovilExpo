@@ -1,37 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import {
+  ActivityIndicator,
   PermissionsAndroid,
   Platform,
   ScrollView,
   StyleSheet,
 } from 'react-native';
 import { Searchbar, Divider, List } from 'react-native-paper';
+import * as Contacts from 'expo-contacts';
+import { firebase } from '../../firebase/config';
 
 const EnviarDinero = ({ navigation }) => {
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [contacts, setContacts] = useState(null);
+  const usuariosRef = firebase.firestore().collection('Usuarios');
+
   const onChangeSearch = (query) => setSearchQuery(query);
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Emails],
+          fields: [Contacts.Fields.PhoneNumbers],
+          sort: Contacts.SortTypes.FirstName,
         });
-
         if (data.length > 0) {
-          const contact = data[0];
-          console.log(contact);
+          setContacts(data);
+          setLoading(false);
         }
       }
     })();
   }, []);
   const handlePress = (phoneNumber) => {
-    navigation.navigate('RealizarEnvio', {
-      name: 'Realizar envío',
-      phoneNumber: phoneNumber,
-    });
+    let number = phoneNumber;
+    if (phoneNumber[0] == 9) {
+      number = '+51' + phoneNumber;
+    }
+    usuariosRef
+      .where('celular', '==', number)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          navigation.navigate('RealizarEnvio', {
+            name: 'Realizar envío',
+            phoneNumber: number,
+          });
+        });
+      })
+      .catch(() => {
+        console.log('rip');
+      });
   };
+  if (loading) return <ActivityIndicator />;
   return (
     <>
       <Searchbar
@@ -41,21 +62,22 @@ const EnviarDinero = ({ navigation }) => {
         value={searchQuery}
       />
       <Divider style={style.divider} />
-      {/* <ScrollView>
+      <ScrollView>
         {contacts &&
           contacts.map((contact) => {
-            return (
-              <List.Item
-                key={contact.phoneNumbers[0].number}
-                onPress={() => handlePress(contact.phoneNumbers[0].number)}
-                style={style.listItem}
-                title={`${contact.givenName} ${contact.familyName}`}
-                description={contact.phoneNumbers[0].number}
-                left={() => <List.Icon icon="account" />}
-              />
-            );
+            if (contact.phoneNumbers && contact.name)
+              return (
+                <List.Item
+                  key={contact.id}
+                  onPress={() => handlePress(contact.phoneNumbers[0].digits)}
+                  style={style.listItem}
+                  title={contact.name}
+                  description={contact.phoneNumbers[0].number}
+                  left={() => <List.Icon icon="account" />}
+                />
+              );
           })}
-      </ScrollView> */}
+      </ScrollView>
     </>
   );
 };

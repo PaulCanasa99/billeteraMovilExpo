@@ -5,6 +5,8 @@ import { Button, useTheme, Text } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Context } from '../../context/Context';
 import { firebase } from '../../firebase/config';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 let backgroundColor;
 const RealizarEnvio = ({ navigation, route }) => {
   const { phoneNumber } = route.params;
@@ -14,14 +16,16 @@ const RealizarEnvio = ({ navigation, route }) => {
   const [mensaje, setMensaje] = useState();
   const { usuario, setUsuario } = useContext(Context);
   const [destino, setDestino] = useState();
-  const increment = firestore.FieldValue.increment(parseFloat(monto));
-  const decrement = firestore.FieldValue.increment(parseFloat(monto) * -1);
+  const increment = firebase.firestore.FieldValue.increment(parseFloat(monto));
+  const decrement = firebase.firestore.FieldValue.increment(
+    parseFloat(monto) * -1
+  );
   const usuariosRef = firebase.firestore().collection('Usuarios');
   const transaccionesRef = firebase.firestore().collection('Transacciones');
   useEffect(() => {
     if (phoneNumber)
       usuariosRef
-        .where('celular', '==', phoneNumber.replace(/\s/g, ''))
+        .where('celular', '==', phoneNumber)
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((documentSnapshot) => {
@@ -52,7 +56,7 @@ const RealizarEnvio = ({ navigation, route }) => {
       destino: destino.userId,
       destinoNombres: destino.nombres,
       destinoApellidos: destino.apellidos,
-      fecha: firestore.FieldValue.serverTimestamp(),
+      fecha: firebase.firestore.FieldValue.serverTimestamp(),
       mensaje: mensaje,
       monto: parseFloat(monto),
     });
@@ -66,61 +70,64 @@ const RealizarEnvio = ({ navigation, route }) => {
   };
   if (destino)
     return (
-      <View style={style.container}>
-        <Text style={style.text}>Enviando dinero a:</Text>
-        <MaterialCommunityIcons
-          name="account-circle"
-          size={100}
-          color="black"
-        />
-
-        <Text
-          style={style.destino}
-        >{`${destino.nombres} ${destino.apellidos}`}</Text>
-        <View style={style.montoContainer}>
+      <KeyboardAwareScrollView keyboardShouldPersistTaps="handled">
+        <View style={style.container}>
+          <Text style={style.text}>Enviando dinero a:</Text>
           <MaterialCommunityIcons
-            name="bitcoin"
-            size={30}
-            color={colors.primary}
-          />
-          <TextInput
-            style={style.monto}
-            value={monto}
-            onChangeText={(monto) => setMonto(monto)}
-            placeholder="0.00"
-            keyboardType="numeric"
-            text
-          />
-        </View>
-
-        <View style={style.mensajeContainer}>
-          <MaterialCommunityIcons
-            name="email"
-            size={30}
+            name="account-circle"
+            size={100}
             color="black"
-            color={colors.primary}
           />
 
-          <TextInput
-            underlineColor={colors.background}
-            selectionColor={colors.background}
-            theme={{ roundness: 0 }}
-            style={style.mensaje}
-            value={mensaje}
-            onChangeText={(mensaje) => setMensaje(mensaje)}
-            placeholder="Escriba un mensaje"
-          />
+          <Text
+            style={style.destino}
+          >{`${destino.nombres} ${destino.apellidos}`}</Text>
+          <View style={style.montoContainer}>
+            <MaterialCommunityIcons
+              name="bitcoin"
+              size={30}
+              color={colors.primary}
+            />
+            <TextInput
+              style={style.monto}
+              value={monto}
+              onChangeText={(monto) => setMonto(monto)}
+              placeholder="0.00"
+              keyboardType="numeric"
+              text
+            />
+          </View>
+
+          <View style={style.mensajeContainer}>
+            <MaterialCommunityIcons
+              name="email"
+              size={30}
+              color="black"
+              color={colors.primary}
+            />
+
+            <TextInput
+              underlineColor={colors.background}
+              selectionColor={colors.background}
+              theme={{ roundness: 0 }}
+              style={style.mensaje}
+              value={mensaje}
+              onChangeText={(mensaje) => setMensaje(mensaje)}
+              placeholder="Escriba un mensaje"
+            />
+          </View>
+
+          <Button
+            labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
+            style={style.button}
+            uppercase={false}
+            mode="contained"
+            onPress={enviar}
+          >
+            Enviar
+          </Button>
         </View>
-
-        <Button
-          style={style.button}
-          uppercase={false}
-          mode="contained"
-          onPress={enviar}
-        >
-          Enviar
-        </Button>
-      </View>
+      </KeyboardAwareScrollView>
     );
   return null;
 };
@@ -147,12 +154,14 @@ const style = StyleSheet.create({
     marginBottom: 20,
   },
   text: {
+    fontFamily: 'Montserrat',
     fontSize: 24,
     width: '80%',
     textAlign: 'center',
     marginBottom: 30,
   },
   destino: {
+    fontFamily: 'Montserrat',
     fontSize: 24,
     width: '70%',
     textAlign: 'center',
@@ -165,7 +174,7 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   monto: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat',
     flex: 1,
     textAlign: 'center',
     marginRight: '10%',
@@ -173,7 +182,7 @@ const style = StyleSheet.create({
     backgroundColor: backgroundColor,
   },
   mensaje: {
-    fontFamily: 'Montserrat-Regular',
+    fontFamily: 'Montserrat',
     flex: 1,
     textAlign: 'center',
     marginRight: '10%',

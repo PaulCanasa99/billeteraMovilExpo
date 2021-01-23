@@ -83,7 +83,7 @@ const Bienvenido = ({ navigation }) => {
     return (
       <KeyboardAwareScrollView
         style={{ paddingTop: 60 }}
-        keyboardShouldPersistTaps="always"
+        keyboardShouldPersistTaps="handled"
       >
         <View style={style.container}>
           <FirebaseRecaptchaVerifierModal
@@ -109,6 +109,7 @@ const Bienvenido = ({ navigation }) => {
             />
           </View>
           <Button
+            labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
             style={style.button}
             uppercase={false}
             mode="contained"
@@ -131,10 +132,12 @@ const style = StyleSheet.create({
     justifyContent: 'center',
   },
   titulo: {
+    fontFamily: 'Montserrat',
     fontSize: 36,
     textAlign: 'center',
   },
   texto: {
+    fontFamily: 'Montserrat',
     fontSize: 18,
     textAlign: 'center',
     marginTop: 80,
@@ -149,8 +152,8 @@ const style = StyleSheet.create({
     height: 40,
   },
   prefix: {
+    fontFamily: 'MontserratSemiBold',
     marginHorizontal: 15,
-    fontWeight: 'bold',
   },
   button: {
     width: '70%',

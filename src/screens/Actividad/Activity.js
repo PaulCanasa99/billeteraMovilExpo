@@ -64,6 +64,7 @@ const Activity = ({ navigation }) => {
                     name: 'Detalle transacción',
                   })
                 }
+                titleStyle={{ fontFamily: 'Montserrat' }}
                 style={style.listItem}
                 title={
                   emisor
@@ -99,12 +100,12 @@ const style = StyleSheet.create({
   monto: {
     alignSelf: 'center',
     marginRight: 20,
-    fontWeight: 'bold',
+    fontFamily: 'MontserratSemiBold',
   },
   mes: {
     fontSize: 18,
     alignSelf: 'center',
-    fontFamily: 'Montserrat-SemiBold',
+    fontFamily: 'MontserratSemiBold',
     marginTop: 10,
   },
 });

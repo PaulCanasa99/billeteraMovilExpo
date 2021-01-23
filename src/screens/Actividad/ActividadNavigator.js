@@ -19,7 +19,7 @@ const ActividadNavigator = () => {
                 <Appbar.BackAction onPress={navigation.goBack} />
               ) : null}
               <Appbar.Content
-                titleStyle={{ fontFamily: 'Montserrat-SemiBold' }}
+                titleStyle={{ fontFamily: 'MontserratSemiBold' }}
                 style={style.appTitle}
                 title={scene.route.name}
               />

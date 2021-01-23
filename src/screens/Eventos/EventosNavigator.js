@@ -24,7 +24,7 @@ const EventosNavigator = () => {
                 <Appbar.Action />
               )}
               <Appbar.Content
-                titleStyle={{ fontFamily: 'Montserrat-SemiBold' }}
+                titleStyle={{ fontFamily: 'MontserratSemiBold' }}
                 style={style.appTitle}
                 title={
                   scene.route.name === 'Evento'

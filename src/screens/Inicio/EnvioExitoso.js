@@ -35,7 +35,7 @@ const EnvioExitoso = ({ navigation, route }) => {
         <Text style={style.datos}>{mensaje}</Text>
       </View>
       <MaterialCommunityIcons
-        style={{ marginTop: 40, marginBottom: 30 }}
+        style={{ marginTop: 25 }}
         name="check-circle"
         size={100}
         color={colors.primary}
@@ -48,14 +48,13 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
   usuarioContainer: {
     flexDirection: 'row',
     width: '60%',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20,
   },
   dataContainer: {
     flexDirection: 'row',
@@ -65,23 +64,27 @@ const style = StyleSheet.create({
     marginTop: 30,
   },
   text: {
+    fontFamily: 'Montserrat',
     fontSize: 24,
     width: '80%',
     textAlign: 'center',
     marginBottom: 20,
   },
   monto: {
+    fontFamily: 'Montserrat',
     fontSize: 48,
     width: '80%',
     textAlign: 'center',
-    marginBottom: 50,
+    marginBottom: 30,
   },
   destino: {
+    fontFamily: 'Montserrat',
     fontSize: 24,
     textAlign: 'center',
     width: '70%',
   },
   datos: {
+    fontFamily: 'Montserrat',
     fontSize: 18,
     width: '70%',
     marginLeft: 15,

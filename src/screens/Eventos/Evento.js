@@ -21,8 +21,12 @@ const Evento = ({ navigation, route }) => {
         <View
           style={{ ...style.textContainer, borderBottomColor: colors.primary }}
         >
-          <Text style={{ fontSize: 18 }}>Descripción:</Text>
-          <Text>{descripcion}</Text>
+          <Text style={{ fontSize: 18, fontFamily: 'Montserrat' }}>
+            Descripción:
+          </Text>
+          <Text style={{ fontSize: 12, fontFamily: 'Montserrat' }}>
+            {descripcion}
+          </Text>
         </View>
         <View
           style={{
@@ -30,8 +34,10 @@ const Evento = ({ navigation, route }) => {
             borderBottomColor: colors.primary,
           }}
         >
-          <Text style={{ fontSize: 18, flexGrow: 1 }}>Precio por persona:</Text>
-          <Text style={{ fontFamily: 'Montserrat-SemiBold', fontSize: 18 }}>
+          <Text style={{ fontSize: 18, flexGrow: 1, fontFamily: 'Montserrat' }}>
+            Precio por persona:
+          </Text>
+          <Text style={{ fontFamily: 'MontserratSemiBold', fontSize: 18 }}>
             {`S/. ${precio.toFixed(2)}`}
           </Text>
         </View>
@@ -41,7 +47,11 @@ const Evento = ({ navigation, route }) => {
             borderBottomColor: colors.primary,
           }}
         >
-          <Text style={{ fontSize: 18, flexGrow: 0.5 }}>Participantes:</Text>
+          <Text
+            style={{ fontSize: 18, flexGrow: 0.5, fontFamily: 'Montserrat' }}
+          >
+            Participantes:
+          </Text>
           <View style={style.participantes}>
             <MaterialCommunityIcons
               style={style.icon}
@@ -75,7 +85,9 @@ const Evento = ({ navigation, route }) => {
             borderBottomColor: colors.primary,
           }}
         >
-          <Text style={{ fontSize: 18, flexGrow: 1 }}>Invitar personas</Text>
+          <Text style={{ fontSize: 18, flexGrow: 1, fontFamily: 'Montserrat' }}>
+            Invitar personas
+          </Text>
           <MaterialCommunityIcons
             name="account-plus"
             color="black"
@@ -87,7 +99,15 @@ const Evento = ({ navigation, route }) => {
             }
           />
         </View>
-        <Button style={style.button} uppercase={false} mode="contained">
+        <Button
+          labelStyle={{
+            fontSize: 24,
+            fontFamily: 'Montserrat',
+          }}
+          style={style.button}
+          uppercase={false}
+          mode="contained"
+        >
           Participar
         </Button>
       </View>

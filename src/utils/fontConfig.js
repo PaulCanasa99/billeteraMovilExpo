@@ -1,20 +1,20 @@
 const fontConfig = {
   default: {
     regular: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: 'Montserrat',
       fontWeight: 'normal',
     },
     medium: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: 'Montserrat',
       fontWeight: 'normal',
       fontSize: 24,
     },
     light: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: 'Montserrat',
       fontWeight: 'normal',
     },
     thin: {
-      fontFamily: 'Montserrat-Regular',
+      fontFamily: 'Montserrat',
       fontWeight: 'normal',
     },
   },
