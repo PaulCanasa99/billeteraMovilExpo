@@ -94,6 +94,7 @@ const RealizarEnvio = ({ navigation, route }) => {
               onChangeText={(monto) => setMonto(monto)}
               placeholder="0.00"
               keyboardType="numeric"
+              returnKeyType="done"
               text
             />
           </View>
@@ -136,7 +137,7 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
   mensajeContainer: {
     flexDirection: 'row',

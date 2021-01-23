@@ -25,7 +25,7 @@ const Detalle = ({ navigation, route }) => {
           color={colors.primary}
         />
         <Text style={style.datos}>
-          {format(fecha.toDate(), "EEEE, d 'de' MMMM 'a las' HH:mm", {
+          {format(fecha, "EEEE, d 'de' MMMM 'a las' HH:mm", {
             locale: es,
           })}
         </Text>

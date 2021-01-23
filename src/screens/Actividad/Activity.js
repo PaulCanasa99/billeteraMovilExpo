@@ -55,7 +55,7 @@ const Activity = ({ navigation }) => {
                   navigation.navigate('Detalle', {
                     monto: item.monto,
                     mensaje: item.mensaje,
-                    fecha: item.fecha,
+                    fecha: item.fecha.toDate(),
                     nombres: emisor ? item.destinoNombres : item.emisorNombres,
                     apellidos: emisor
                       ? item.destinoApellidos

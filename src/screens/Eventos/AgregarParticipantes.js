@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  ActivityIndicator,
-  PermissionsAndroid,
-  Platform,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import {
   Searchbar,
   Divider,
@@ -24,21 +18,23 @@ const AgregarParticipantes = ({ navigation, route }) => {
   const [invitados, setInvitados] = useState([]);
   const [loading, setLoading] = useState(true);
   const onChangeSearch = (query) => setSearchQuery(query);
+
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.Emails],
+          fields: [Contacts.Fields.PhoneNumbers],
+          sort: Contacts.SortTypes.FirstName,
         });
-
         if (data.length > 0) {
-          const contact = data[0];
-          console.log(contact);
+          setContacts(data);
+          setLoading(false);
         }
       }
     })();
   }, []);
+
   const handlePress = (phoneNumber) => {
     let newArray;
     const index = invitados.indexOf(phoneNumber);
@@ -67,9 +63,8 @@ const AgregarParticipantes = ({ navigation, route }) => {
   //       })
   //   );
   // };
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  if (loading) return <ActivityIndicator />;
+
   return (
     <>
       <Searchbar
@@ -79,41 +74,44 @@ const AgregarParticipantes = ({ navigation, route }) => {
         value={searchQuery}
       />
       <Divider style={{ height: 1, backgroundColor: colors.primary }} />
-      {/* <ScrollView>
+      <ScrollView>
         {contacts &&
           contacts.map((contact) => {
-            return (
-              <List.Item
-                key={contact.phoneNumbers[0].number}
-                style={style.listItem}
-                title={`${contact.givenName} ${contact.familyName}`}
-                description={contact.phoneNumbers[0].number}
-                left={() => <List.Icon icon="account" />}
-                right={() => (
-                  <Checkbox
-                    onPress={() => handlePress(contact.phoneNumbers[0].number)}
-                    status={
-                      invitados.includes(contact.phoneNumbers[0].number)
-                        ? 'checked'
-                        : 'unchecked'
-                    }
-                    color={colors.text}
-                    uncheckedColor={colors.text}
-                  />
-                )}
-              />
-            );
+            if (contact.phoneNumbers && contact.name)
+              return (
+                <List.Item
+                  key={contact.id}
+                  style={style.listItem}
+                  title={contact.name}
+                  description={contact.phoneNumbers[0].number}
+                  left={() => <List.Icon icon="account" />}
+                  right={() => (
+                    <Checkbox
+                      onPress={() =>
+                        handlePress(contact.phoneNumbers[0].number)
+                      }
+                      status={
+                        invitados.includes(contact.phoneNumbers[0].number)
+                          ? 'checked'
+                          : 'unchecked'
+                      }
+                      color={colors.text}
+                      uncheckedColor={colors.text}
+                    />
+                  )}
+                />
+              );
           })}
         <Divider style={{ height: 1, backgroundColor: colors.primary }} />
         <Button
           style={style.button}
           uppercase={false}
           mode="contained"
-          onPress={agregarInvitados}
+          // onPress={agregarInvitados}
         >
           Agregar
         </Button>
-      </ScrollView> */}
+      </ScrollView>
     </>
   );
 };

@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Context } from '../../context/Context';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const CrearEvento = ({ navigation }) => {
   const { colors } = useTheme();
@@ -17,28 +18,26 @@ const CrearEvento = ({ navigation }) => {
   const [descripcion, setDescripcion] = useState('');
   const [precio, setPrecio] = useState();
   const [date, setDate] = useState(new Date());
+
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const { usuario } = useContext(Context);
   const eventosRef = firebase.firestore().collection('Eventos');
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
+  // const onChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   setShow(Platform.OS === 'ios');
+  //   setDate(currentDate);
+  // };
 
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
+  // const showMode = (currentMode) => {
+  //   setShow(true);
+  //   setMode(currentMode);
+  // };
 
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
+  const handleConfirm = (date) => {
+    setDate(date);
+    setShow(false);
   };
 
   const Crear = () => {
@@ -105,6 +104,7 @@ const CrearEvento = ({ navigation }) => {
         <View style={style.inputContainer}>
           <View style={style.fecha}>
             <Text
+              onPress={() => setShow(true)}
               style={{
                 fontFamily: 'Montserrat',
                 color: colors.primary,
@@ -113,14 +113,15 @@ const CrearEvento = ({ navigation }) => {
             >
               Fecha y hora:
             </Text>
+
             <MaterialCommunityIcons
-              onPress={showDatepicker}
+              onPress={() => setShow(true)}
               name="calendar-outline"
               size={20}
               color={colors.primary}
             />
             <MaterialCommunityIcons
-              onPress={showTimepicker}
+              onPress={() => setShow(true)}
               name="clock-outline"
               size={20}
               color={colors.primary}
@@ -132,9 +133,9 @@ const CrearEvento = ({ navigation }) => {
           </Text>
         </View>
 
-        {show && (
+        {/* {show && (
           <DateTimePicker
-            style={{ width: 100 }}
+            style={{ width: '80%' }}
             testID="dateTimePicker"
             value={date}
             mode={mode}
@@ -143,7 +144,14 @@ const CrearEvento = ({ navigation }) => {
             onChange={onChange}
             minimumDate={new Date()}
           />
-        )}
+        )} */}
+        <DateTimePickerModal
+          minimumDate={new Date()}
+          isVisible={show}
+          mode="datetime"
+          onConfirm={handleConfirm}
+          onCancel={() => setShow(false)}
+        />
         <Button
           labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
           style={style.button}
@@ -164,14 +172,14 @@ const style = StyleSheet.create({
   },
   button: {
     width: '60%',
-    justifyContent: 'center',
     marginVertical: 20,
   },
   date: {
-    borderBottomColor: '#00ADB5',
-    borderBottomWidth: 1,
+    fontFamily: 'Montserrat',
     marginVertical: 10,
     height: 30,
+    borderBottomColor: '#00ADB5',
+    borderBottomWidth: 1,
   },
   input: {
     fontFamily: 'Montserrat',
