@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Button, useTheme, List } from 'react-native-paper';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { firebase } from '../../firebase/config';
 import { format } from 'date-fns';
@@ -15,21 +15,40 @@ const TusEventos = ({ navigation }) => {
   const eventosRef = firebase.firestore().collection('Eventos');
 
   useEffect(() => {
-    const subscriber = eventosRef
+    const movimientos = [];
+    eventosRef
       .where('organizadorId', '==', usuario.userId)
       .onSnapshot((querySnapshot) => {
-        const eventos = [];
         querySnapshot.forEach((documentSnapshot) => {
-          eventos.push({
+          movimientos.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
           });
         });
-        setEventos(eventos);
+      });
+    eventosRef
+      .where('invitados', 'array-contains', usuario.celular)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          movimientos.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+      });
+    eventosRef
+      .where('participantes', 'array-contains', usuario.celular)
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          movimientos.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+        movimientos.sort((a, b) => a.fecha.toDate() - b.fecha.toDate());
+        setEventos(movimientos);
         setLoading(false);
       });
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
   }, []);
 
   if (loading) {
@@ -60,45 +79,48 @@ const TusEventos = ({ navigation }) => {
           Antiguos
         </Button>
       </View>
-      <FlatList
-        data={eventos}
-        renderItem={({ item }) => {
-          return (
-            <List.Item
-              left={() => <List.Icon icon="account" />}
-              style={{ ...style.listItem, borderBottomColor: colors.primary }}
-              title={item.nombre}
-              titleStyle={{
-                fontSize: 18,
-                color: colors.text,
-                fontFamily: 'Montserrat',
-              }}
-              description={format(
-                item.fecha.toDate(),
-                "EEEE, d 'de' MMMM HH:mm",
-                { locale: es }
-              )}
-              descriptionStyle={{
-                fontSize: 18,
-                color: colors.text,
-                fontFamily: 'Montserrat',
-              }}
-              onPress={() =>
-                navigation.navigate('Evento', {
-                  nombre: item.nombre,
-                  descripcion: item.descripcion,
-                  fecha: item.fecha,
-                  precio: item.precio,
-                  organizadorId: item.organizadorId,
-                  organizadorNombres: item.organizadorNombres,
-                  organizadorApellidos: item.organizadorApellidos,
-                  eventoId: item.key,
-                })
-              }
-            />
-          );
-        }}
-      />
+      <ScrollView>
+        {eventos &&
+          eventos.map((item) => {
+            return (
+              <List.Item
+                key={item.key}
+                left={() => <List.Icon icon="account" />}
+                style={{ ...style.listItem, borderBottomColor: colors.primary }}
+                title={item.nombre}
+                titleStyle={{
+                  fontSize: 18,
+                  color: colors.text,
+                  fontFamily: 'Montserrat',
+                }}
+                description={format(
+                  item.fecha.toDate(),
+                  "EEEE, d 'de' MMMM HH:mm",
+                  { locale: es }
+                )}
+                descriptionStyle={{
+                  fontSize: 18,
+                  color: colors.text,
+                  fontFamily: 'Montserrat',
+                }}
+                onPress={() =>
+                  navigation.navigate('Evento', {
+                    nombre: item.nombre,
+                    descripcion: item.descripcion,
+                    fecha: item.fecha,
+                    precio: item.precio,
+                    organizadorId: item.organizadorId,
+                    organizadorNombres: item.organizadorNombres,
+                    organizadorApellidos: item.organizadorApellidos,
+                    eventoId: item.key,
+                    invitados: item.invitados,
+                    participantes: item.participantes,
+                  })
+                }
+              />
+            );
+          })}
+      </ScrollView>
     </View>
   );
 };

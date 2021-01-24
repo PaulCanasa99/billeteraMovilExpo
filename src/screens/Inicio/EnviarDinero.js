@@ -14,6 +14,7 @@ const EnviarDinero = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [contacts, setContacts] = useState(null);
+  const [numerosRegistrados, setNumerosRegistrados] = useState([]);
   const usuariosRef = firebase.firestore().collection('Usuarios');
 
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -26,12 +27,31 @@ const EnviarDinero = ({ navigation }) => {
           sort: Contacts.SortTypes.FirstName,
         });
         if (data.length > 0) {
-          setContacts(data);
-          setLoading(false);
+          usuariosRef.get().then((querySnapshot) => {
+            const numeros = [];
+            querySnapshot.forEach((doc) => {
+              numeros.push(doc.data().celular);
+            });
+            setNumerosRegistrados(numeros);
+            const phoneNumbers = data.filter((contact) => {
+              if (contact.phoneNumbers && contact.name)
+                if (contact.phoneNumbers[0].digits[0] == 9)
+                  return numerosRegistrados.includes(
+                    '+51' + contact.phoneNumbers[0].digits
+                  );
+                else
+                  return numerosRegistrados.includes(
+                    contact.phoneNumbers[0].digits
+                  );
+              else return false;
+            });
+            setContacts(phoneNumbers);
+            setLoading(false);
+          });
         }
       }
     })();
-  }, []);
+  }, [loading]);
   const handlePress = (phoneNumber) => {
     let number = phoneNumber;
     if (phoneNumber[0] == 9) {

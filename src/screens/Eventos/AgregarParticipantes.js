@@ -8,6 +8,7 @@ import {
   useTheme,
   Button,
 } from 'react-native-paper';
+import { firebase } from '../../firebase/config';
 import * as Contacts from 'expo-contacts';
 
 const AgregarParticipantes = ({ navigation, route }) => {
@@ -17,7 +18,9 @@ const AgregarParticipantes = ({ navigation, route }) => {
   const [contacts, setContacts] = useState(null);
   const [invitados, setInvitados] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [numerosRegistrados, setNumerosRegistrados] = useState([]);
   const onChangeSearch = (query) => setSearchQuery(query);
+  const usuariosRef = firebase.firestore().collection('Usuarios');
 
   useEffect(() => {
     (async () => {
@@ -28,12 +31,31 @@ const AgregarParticipantes = ({ navigation, route }) => {
           sort: Contacts.SortTypes.FirstName,
         });
         if (data.length > 0) {
-          setContacts(data);
-          setLoading(false);
+          usuariosRef.get().then((querySnapshot) => {
+            const numeros = [];
+            querySnapshot.forEach((doc) => {
+              numeros.push(doc.data().celular);
+            });
+            setNumerosRegistrados(numeros);
+            const phoneNumbers = data.filter((contact) => {
+              if (contact.phoneNumbers && contact.name)
+                if (contact.phoneNumbers[0].digits[0] == 9)
+                  return numerosRegistrados.includes(
+                    '+51' + contact.phoneNumbers[0].digits
+                  );
+                else
+                  return numerosRegistrados.includes(
+                    contact.phoneNumbers[0].digits
+                  );
+              else return false;
+            });
+            setContacts(phoneNumbers);
+            setLoading(false);
+          });
         }
       }
     })();
-  }, []);
+  }, [loading]);
 
   const handlePress = (phoneNumber) => {
     let newArray;
@@ -47,22 +69,22 @@ const AgregarParticipantes = ({ navigation, route }) => {
     setInvitados(newArray);
   };
 
-  // const agregarInvitados = () => {
-  //   console.log(invitados);
-  //   console.log(eventoId);
-  //   invitados.forEach((invitado) =>
-  //     firestore()
-  //       .doc(`Eventos/${eventoId}`)
-  //       .update({
-  //         invitados: firestore.FieldValue.arrayUnion(
-  //           invitado.replace(/\s/g, '')
-  //         ),
-  //       })
-  //       .then(() => {
-  //         console.log('gaa');
-  //       })
-  //   );
-  // };
+  const agregarInvitados = () => {
+    console.log(invitados);
+    console.log(eventoId);
+    // invitados.forEach((invitado) =>
+    //   firestore()
+    //     .doc(`Eventos/${eventoId}`)
+    //     .update({
+    //       invitados: firestore.FieldValue.arrayUnion(
+    //         invitado.replace(/\s/g, '')
+    //       ),
+    //     })
+    //     .then(() => {
+    //       console.log('gaa');
+    //     })
+    // );
+  };
   if (loading) return <ActivityIndicator />;
 
   return (
@@ -86,12 +108,12 @@ const AgregarParticipantes = ({ navigation, route }) => {
                   description={contact.phoneNumbers[0].number}
                   left={() => <List.Icon icon="account" />}
                   right={() => (
-                    <Checkbox
+                    <Checkbox.Android
                       onPress={() =>
-                        handlePress(contact.phoneNumbers[0].number)
+                        handlePress(contact.phoneNumbers[0].digits)
                       }
                       status={
-                        invitados.includes(contact.phoneNumbers[0].number)
+                        invitados.includes(contact.phoneNumbers[0].digits)
                           ? 'checked'
                           : 'unchecked'
                       }
@@ -102,16 +124,17 @@ const AgregarParticipantes = ({ navigation, route }) => {
                 />
               );
           })}
-        <Divider style={{ height: 1, backgroundColor: colors.primary }} />
-        <Button
-          style={style.button}
-          uppercase={false}
-          mode="contained"
-          // onPress={agregarInvitados}
-        >
-          Agregar
-        </Button>
       </ScrollView>
+      <Divider style={{ height: 1, backgroundColor: colors.primary }} />
+      <Button
+        labelStyle={{ fontFamily: 'Montserrat', fontSize: 20 }}
+        style={style.button}
+        uppercase={false}
+        mode="contained"
+        onPress={agregarInvitados}
+      >
+        Agregar
+      </Button>
     </>
   );
 };

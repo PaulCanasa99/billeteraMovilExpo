@@ -8,12 +8,12 @@ import { firebase } from '../../firebase/config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let backgroundColor;
-const RealizarEnvio = ({ navigation, route }) => {
-  const { phoneNumber, organizadorId } = route.params;
+const RealizarEnvioEvento = ({ navigation, route }) => {
+  const { phoneNumber, organizadorId, nombre, precio, eventoId } = route.params;
   const { colors } = useTheme();
   backgroundColor = colors.background;
-  const [monto, setMonto] = useState('');
-  const [mensaje, setMensaje] = useState();
+  const [monto, setMonto] = useState(precio.toFixed(2).toString());
+  const [mensaje, setMensaje] = useState(nombre);
   const { usuario, setUsuario } = useContext(Context);
   const [destino, setDestino] = useState();
   const increment = firebase.firestore.FieldValue.increment(parseFloat(monto));
@@ -22,6 +22,7 @@ const RealizarEnvio = ({ navigation, route }) => {
   );
   const usuariosRef = firebase.firestore().collection('Usuarios');
   const transaccionesRef = firebase.firestore().collection('Transacciones');
+  const eventosRef = firebase.firestore().collection('Eventos');
   useEffect(() => {
     if (phoneNumber)
       usuariosRef
@@ -65,6 +66,10 @@ const RealizarEnvio = ({ navigation, route }) => {
       mensaje: mensaje,
       monto: parseFloat(monto),
     });
+    eventosRef.doc(eventoId).update({
+      participantes: firebase.firestore.FieldValue.arrayUnion(usuario.celular),
+      invitados: firebase.firestore.FieldValue.arrayRemove(usuario.celular),
+    });
     navigation.navigate('EnvioExitoso', {
       name: 'Envío exitoso',
       monto: monto,
@@ -94,6 +99,7 @@ const RealizarEnvio = ({ navigation, route }) => {
               color={colors.primary}
             />
             <TextInput
+              editable={false}
               style={style.monto}
               value={monto}
               onChangeText={(monto) => setMonto(monto)}
@@ -197,4 +203,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default RealizarEnvio;
+export default RealizarEnvioEvento;

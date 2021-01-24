@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { Button, useTheme, Text } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Context } from '../../context/Context';
+import { firebase } from '../../firebase/config';
 
 const Evento = ({ navigation, route }) => {
   const { colors } = useTheme();
-  const { descripcion, precio, eventoId } = route.params;
+  const {
+    descripcion,
+    precio,
+    eventoId,
+    organizadorId,
+    nombre,
+    invitados,
+    participantes,
+  } = route.params;
+  const { usuario } = useContext(Context);
 
   return (
     <ScrollView>
@@ -47,10 +58,8 @@ const Evento = ({ navigation, route }) => {
             borderBottomColor: colors.primary,
           }}
         >
-          <Text
-            style={{ fontSize: 18, flexGrow: 0.5, fontFamily: 'Montserrat' }}
-          >
-            Participantes:
+          <Text style={{ fontSize: 18, flexGrow: 1, fontFamily: 'Montserrat' }}>
+            Ver participantes
           </Text>
           <View style={style.participantes}>
             <MaterialCommunityIcons
@@ -58,8 +67,14 @@ const Evento = ({ navigation, route }) => {
               name="account"
               color="black"
               size={24}
+              onPress={() => {
+                navigation.navigate('Participantes', {
+                  invitados: invitados,
+                  participantes: participantes,
+                });
+              }}
             />
-            <MaterialCommunityIcons
+            {/* <MaterialCommunityIcons
               style={style.icon}
               name="account"
               color="black"
@@ -76,7 +91,7 @@ const Evento = ({ navigation, route }) => {
               name="account"
               color="black"
               size={24}
-            />
+            /> */}
           </View>
         </View>
         <View
@@ -99,17 +114,28 @@ const Evento = ({ navigation, route }) => {
             }
           />
         </View>
-        <Button
-          labelStyle={{
-            fontSize: 24,
-            fontFamily: 'Montserrat',
-          }}
-          style={style.button}
-          uppercase={false}
-          mode="contained"
-        >
-          Participar
-        </Button>
+        {organizadorId !== usuario.userId && (
+          <Button
+            labelStyle={{
+              fontSize: 24,
+              fontFamily: 'Montserrat',
+            }}
+            style={style.button}
+            uppercase={false}
+            mode="contained"
+            onPress={() =>
+              navigation.navigate('Confirmar participación', {
+                name: 'Confirmar participación',
+                organizadorId: organizadorId,
+                nombre: nombre,
+                precio: precio,
+                eventoId: eventoId,
+              })
+            }
+          >
+            Participar
+          </Button>
+        )}
       </View>
     </ScrollView>
   );

@@ -5,9 +5,11 @@ import Evento from './Evento';
 import { Appbar } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import CrearEvento from './CrearEvento';
+import RealizarEnvioEvento from './RealizarEnvioEvento';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import AgregarParticipantes from './AgregarParticipantes';
+import Participantes from './Participantes';
 
 const EventosNavigator = () => {
   const Stack = createStackNavigator();
@@ -59,6 +61,11 @@ const EventosNavigator = () => {
       <Stack.Screen name="Tus eventos" component={TusEventos} />
       <Stack.Screen name="Crear evento" component={CrearEvento} />
       <Stack.Screen name="Evento" component={Evento} />
+      <Stack.Screen name="Participantes" component={Participantes} />
+      <Stack.Screen
+        name="Confirmar participación"
+        component={RealizarEnvioEvento}
+      />
       <Stack.Screen
         name="Agregar Participantes"
         component={AgregarParticipantes}
