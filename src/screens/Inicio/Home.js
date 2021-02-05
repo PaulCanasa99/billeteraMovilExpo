@@ -40,11 +40,14 @@ const Home = ({ navigation }) => {
         labelStyle={{ fontFamily: 'Montserrat', fontSize: 24 }}
         uppercase={false}
         mode="contained"
-        onPress={() =>
-          firebase
-            .auth()
-            .signOut()
-            .then(() => console.log('User signed out!'))
+        onPress={
+          () =>
+            navigation.navigate('DatosTarjeta', { name: 'Realizar depósito' })
+
+          // firebase
+          //   .auth()
+          //   .signOut()
+          //   .then(() => console.log('User signed out!'))
         }
         color={colors.accent}
       >

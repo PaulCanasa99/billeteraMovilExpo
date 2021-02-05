@@ -5,6 +5,7 @@ import EnviarDinero from './EnviarDinero';
 import CustomNavigationBar from '../../components/CustomNavigationBar';
 import RealizarEnvio from './RealizarEnvio';
 import EnvioExitoso from './EnvioExitoso';
+import DatosTarjeta from './DatosTarjeta';
 
 const InicioNavigator = () => {
   const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ const InicioNavigator = () => {
       <Stack.Screen name="EnviarDinero" component={EnviarDinero} />
       <Stack.Screen name="RealizarEnvio" component={RealizarEnvio} />
       <Stack.Screen name="EnvioExitoso" component={EnvioExitoso} />
+      <Stack.Screen name="DatosTarjeta" component={DatosTarjeta} />
     </Stack.Navigator>
   );
 };
