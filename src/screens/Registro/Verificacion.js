@@ -60,6 +60,7 @@ const style = StyleSheet.create({
     width: '90%',
   },
   inputContainer: {
+    fontSize: 24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

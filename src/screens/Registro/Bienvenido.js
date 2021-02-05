@@ -49,7 +49,7 @@ const Bienvenido = ({ navigation }) => {
       console.log('efe');
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        '+51992878219',
+        `+51${phoneNumber}`,
         recaptchaVerifier.current
       );
       console.log('eeee');

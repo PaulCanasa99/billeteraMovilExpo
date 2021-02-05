@@ -72,18 +72,18 @@ const AgregarParticipantes = ({ navigation, route }) => {
   const agregarInvitados = () => {
     console.log(invitados);
     console.log(eventoId);
-    // invitados.forEach((invitado) =>
-    //   firestore()
-    //     .doc(`Eventos/${eventoId}`)
-    //     .update({
-    //       invitados: firestore.FieldValue.arrayUnion(
-    //         invitado.replace(/\s/g, '')
-    //       ),
-    //     })
-    //     .then(() => {
-    //       console.log('gaa');
-    //     })
-    // );
+    invitados.forEach((invitado) =>
+      firestore()
+        .doc(`Eventos/${eventoId}`)
+        .update({
+          invitados: firestore.FieldValue.arrayUnion(
+            invitado.replace(/\s/g, '')
+          ),
+        })
+        .then(() => {
+          console.log('gaa');
+        })
+    );
   };
   if (loading) return <ActivityIndicator />;
 
